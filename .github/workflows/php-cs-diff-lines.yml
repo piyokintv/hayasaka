@@ -22,5 +22,5 @@ jobs:
       - name: Git diff
         id: git-diff-changed-files
         run: echo "changed_files=$(git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php')" >> $GITHUB_OUTPUT
-      - name: Echo
+      - name: Echo # 後々削除
         run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
