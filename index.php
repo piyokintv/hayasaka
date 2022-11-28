@@ -9,5 +9,9 @@
             echo "Hi, I'm a PHP script!";
         ?>
 
+        <?php
+              if(true){echo "test";}else{echo 'test';}
+        ?>
+
     </body>
 </html>
