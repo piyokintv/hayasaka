@@ -10,4 +10,9 @@ class User extends Model
     use HasFactory;
 
     protected $guarded = ['created_at', 'updated_at'];
+
+    public function methodWithBadCodingStyle() {
+           $hoge=1;
+    if(true){echo "test";}else{echo 'test';}
+    }
 }
