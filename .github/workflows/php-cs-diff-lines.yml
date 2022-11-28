@@ -10,6 +10,8 @@ jobs:
   php-cs:
     name: PHP CS of changed files
     runs-on: ubuntu-latest
+    outputs:
+      outputs-on-phpcs: ${{ steps.reported-checkstyle-with-phpcs.outputs.reported-checkstyle }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
@@ -25,4 +27,18 @@ jobs:
       - name: Echo # 後々削除
         run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
       - name: Run phpcs
-        run: phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }}
+        id: reported-checkstyle-with-phpcs
+        run: echo "reported-checkstyle=$(phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }})" >> $GITHUB_OUTPUT
+  checkstyle_filter-git:
+    # name:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 # 必要？
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+      - name: Install checkstyle_filter-git
+        run: gem install checkstyle_filter-git
+      - name: Run checkstyle_filter-git
+        run: checkstyle_filter-git diff origin/${{ github.base_ref }} ${{ needs.php-cs.outputs.outputs-on-phpcs }}
