@@ -16,7 +16,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: cs2pr, phpcs
+          tools: cs2pr, phpcs # cs2prいらんか？
       - name: Fetch
         run: git fetch origin ${{ github.base_ref }} --depth=1
       - name: Git diff
