@@ -16,11 +16,13 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: cs2pr, phpcs
+          tools: cs2pr, phpcs # cs2prいらんか？
       - name: Fetch
         run: git fetch origin ${{ github.base_ref }} --depth=1
       - name: Git diff
         id: git-diff-changed-files
         run: echo "changed_files=$(git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php')" >> $GITHUB_OUTPUT
-      - name: Echo
+      - name: Echo # 後々削除
         run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
+      - name: Run phpcs
+        run: phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }}
