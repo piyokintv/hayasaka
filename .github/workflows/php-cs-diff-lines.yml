@@ -35,6 +35,7 @@ jobs:
   checkstyle_filter-git:
     # name:
     runs-on: ubuntu-latest
+    needs: php-cs
     steps:
       - uses: actions/checkout@v3 # 必要？
       - name: Set up Ruby
