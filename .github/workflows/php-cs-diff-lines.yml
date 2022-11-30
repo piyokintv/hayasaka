@@ -30,7 +30,7 @@ jobs:
         id: reported-checkstyle-with-phpcs
         run: |
           echo 'reported-checkstyle<<EOF' >> $GITHUB_OUTPUT
-          echo "$(phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }})" >> $GITHUB_OUTPUT
+          echo $(phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }}) >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
   checkstyle_filter-git:
     # name:
