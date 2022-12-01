@@ -7,10 +7,10 @@ on:
       - '**.php'
 
 jobs:
-  php-cs:
-    name: PHP CS of changed files
+  php-cs: # 1つのジョブでやるなら、名前変更？
+    name: PHP CS of changed files # 1つのジョブでやるなら、名前変更？
     runs-on: ubuntu-latest
-    outputs:
+    outputs: # いらん
       outputs-on-phpcs: ${{ steps.reported-checkstyle-with-phpcs.outputs.reported-checkstyle }}
     steps:
       - uses: actions/checkout@v3
@@ -19,6 +19,12 @@ jobs:
         with:
           php-version: '8.1'
           tools: cs2pr, phpcs # cs2prいらんか？
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+      - name: Install checkstyle_filter-git
+        run: gem install checkstyle_filter-git
       - name: Fetch
         run: git fetch origin ${{ github.base_ref }} --depth=1
       - name: Git diff
@@ -26,23 +32,8 @@ jobs:
         run: echo "changed_files=$(git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php')" >> $GITHUB_OUTPUT
       - name: Echo # 後々削除
         run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
-      - name: Run phpcs
-        id: reported-checkstyle-with-phpcs
+      - name: Run phpcs # 名前変更
+        id: reported-checkstyle-with-phpcs # いらん
         run: |
-          echo 'reported-checkstyle<<EOF' >> $GITHUB_OUTPUT
-          echo "$(phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }})" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
-  checkstyle_filter-git:
-    # name:
-    runs-on: ubuntu-latest
-    needs: php-cs
-    steps:
-      - uses: actions/checkout@v3 # 必要？
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-      - name: Install checkstyle_filter-git
-        run: gem install checkstyle_filter-git
-      - name: Run checkstyle_filter-git
-        run: checkstyle_filter-git diff origin/${{ github.base_ref }} ${{ needs.php-cs.outputs.outputs-on-phpcs }}
+          phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }} \
+          | checkstyle_filter-git diff origin/${{ github.base_ref }}
