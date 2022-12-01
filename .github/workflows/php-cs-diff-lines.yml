@@ -7,10 +7,10 @@ on:
       - '**.php'
 
 jobs:
-  php-cs:
-    name: PHP CS of changed files
+  php-cs: # 1つのジョブでやるなら、名前変更？
+    name: PHP CS of changed files # 1つのジョブでやるなら、名前変更？
     runs-on: ubuntu-latest
-    outputs:
+    outputs: # いらん
       outputs-on-phpcs: ${{ steps.reported-checkstyle-with-phpcs.outputs.reported-checkstyle }}
     steps:
       - uses: actions/checkout@v3
@@ -32,8 +32,8 @@ jobs:
         run: echo "changed_files=$(git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php')" >> $GITHUB_OUTPUT
       - name: Echo # 後々削除
         run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
-      - name: Run phpcs
-        id: reported-checkstyle-with-phpcs
+      - name: Run phpcs # 名前変更
+        id: reported-checkstyle-with-phpcs # いらん
         run: |
           phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }} \
           | checkstyle_filter-git diff origin/${{ github.base_ref }}
