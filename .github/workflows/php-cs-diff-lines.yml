@@ -36,4 +36,5 @@ jobs:
         id: reported-checkstyle-with-phpcs # いらん
         run: |
           phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }} \
-          | checkstyle_filter-git diff origin/${{ github.base_ref }}
+          | checkstyle_filter-git diff origin/${{ github.base_ref }} \
+          | cs2pr
