@@ -14,5 +14,8 @@ class User extends Model
     public function methodWithBadCodingStyle() {
            $hoge=1;
     if(true){echo "test";}else{echo 'test';}
+
+            $hoge=1;
+    if(true){echo "test";}else{echo 'test';}
     }
 }
