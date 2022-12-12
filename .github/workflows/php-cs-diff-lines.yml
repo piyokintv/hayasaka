@@ -27,14 +27,15 @@ jobs:
         run: gem install checkstyle_filter-git
       - name: Fetch
         run: git fetch origin ${{ github.base_ref }} --depth=1
-      - name: Git diff
-        id: git-diff-changed-files
-        run: echo "changed_files=$(git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php')" >> $GITHUB_OUTPUT
-      - name: Echo # 後々削除
-        run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
+      # - name: Git diff
+      #   id: git-diff-changed-files
+        # run: echo "changed_files=$(git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php')" >> $GITHUB_OUTPUT
+      # - name: Echo # 後々削除
+        # run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
       - name: Run phpcs # 名前変更
         id: reported-checkstyle-with-phpcs # いらん
         run: |
-          phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }} \
+          git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php' \
+          | xargs phpcs -q --report=checkstyle --standard=PSR12 \
           | checkstyle_filter-git diff origin/${{ github.base_ref }} \
           | cs2pr
