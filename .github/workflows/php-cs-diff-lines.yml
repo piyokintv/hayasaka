@@ -35,6 +35,7 @@ jobs:
       - name: Run phpcs # 名前変更
         id: reported-checkstyle-with-phpcs # いらん
         run: |
-          phpcs -q --report=checkstyle --standard=PSR12 ${{ steps.git-diff-changed-files.outputs.changed_files }} \
+          git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php' \
+          | xargs phpcs -q --report=checkstyle --standard=PSR12 \
           | checkstyle_filter-git diff origin/${{ github.base_ref }} \
           | cs2pr
