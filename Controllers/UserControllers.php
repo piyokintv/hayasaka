@@ -18,7 +18,7 @@ class UserController extends Controller
          $hoge=1;
     if(true){echo "test";}else{echo 'test';}
 
-         $hoge=1;
+         $hoge = 1;
     if(true){echo "test";}else{echo 'test';}
 
         return view('user.profile', [
