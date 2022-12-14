@@ -14,7 +14,11 @@
         ?>
 
         <?php
-              if(true){echo "test";}else{echo 'test';}
+            if (true) {
+                echo "test";
+            } else {
+                echo 'test';
+            }
         ?>
 
     </body>
