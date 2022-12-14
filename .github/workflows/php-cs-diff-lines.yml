@@ -1,0 +1,34 @@
+name: PHP CS for diff lines
+run-name: ${{ github.event.pull_request.title }} / by ${{ github.actor }}
+
+on:
+  pull_request:
+    # branches:
+    paths:
+      - '**.php'
+
+jobs:
+  php-cs-for-diff-lines:
+    name: PHP CS for diff lines
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: cs2pr, phpcs
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+      - name: Install checkstyle_filter-git
+        run: gem install checkstyle_filter-git
+      - name: Fetch
+        run: git fetch origin ${{ github.base_ref }} --depth=1
+      - name: Run phpcs & Display errors of diff lines
+        run: |
+          git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php' \
+          | xargs phpcs -q --report=checkstyle --standard=PSR12 \
+          | checkstyle_filter-git diff origin/${{ github.base_ref }} \
+          | cs2pr
