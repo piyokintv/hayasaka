@@ -1,5 +1,5 @@
 name: PHP CS for diff lines
-run-name: Pushed to ${{ github.event.pull_request.title }} by ${{ github.actor }}
+run-name: ${{ github.event.pull_request.title }} / by ${{ github.actor }}
 
 on:
   pull_request:
