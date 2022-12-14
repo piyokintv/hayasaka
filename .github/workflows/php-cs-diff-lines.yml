@@ -8,18 +8,16 @@ on:
       - '**.php'
 
 jobs:
-  php-cs: # 1つのジョブでやるなら、名前変更？
-    name: PHP CS of changed files # 1つのジョブでやるなら、名前変更？
+  php-cs-for-diff-lines:
+    name: PHP CS for diff lines
     runs-on: ubuntu-latest
-    outputs: # いらん
-      outputs-on-phpcs: ${{ steps.reported-checkstyle-with-phpcs.outputs.reported-checkstyle }}
     steps:
       - uses: actions/checkout@v3
-      - name: Setup PHP
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: cs2pr, phpcs # cs2prいらんか？
+          tools: cs2pr, phpcs
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -28,13 +26,7 @@ jobs:
         run: gem install checkstyle_filter-git
       - name: Fetch
         run: git fetch origin ${{ github.base_ref }} --depth=1
-      # - name: Git diff
-      #   id: git-diff-changed-files
-        # run: echo "changed_files=$(git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php')" >> $GITHUB_OUTPUT
-      # - name: Echo # 後々削除
-        # run: echo ${{ steps.git-diff-changed-files.outputs.changed_files }}
-      - name: Run phpcs # 名前変更
-        id: reported-checkstyle-with-phpcs # いらん
+      - name: Run phpcs & Display errors of diff lines
         run: |
           git diff --name-only origin/${{ github.base_ref }} HEAD -- '*.php' \
           | xargs phpcs -q --report=checkstyle --standard=PSR12 \
